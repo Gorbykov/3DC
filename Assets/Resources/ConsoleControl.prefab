@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &176194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 489186}
+  - 114: {fileID: 11452748}
+  - 114: {fileID: 11416430}
+  m_Layer: 0
+  m_Name: ConsoleControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &489186
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 308.5, y: 45, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11416430
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21da3cdb2f2b9742bb2ea8a5c19d3ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11452748
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40756e366f0b48f4b837f6c3f672f0d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cam: {fileID: 0}
+  inField: {fileID: 0}
+  outFields:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  newCharge: {fileID: 165016, guid: 3445e829857a97f4f8b6bcae902f8f62, type: 2}
+  prefCharge: {fileID: 165016, guid: 3445e829857a97f4f8b6bcae902f8f62, type: 2}
+  okButton: 0
+  commandList:
+  - add
+  - remove
+  - getf
+  - getw
+  errorList:
+  - "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u0430"
+  - "\u041D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E
+    \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435: "
+  - "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0442\u0438\u043F \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u043E\u0432
+    \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435: "
+  - "\u0417\u0430\u0440\u044F\u0434 \u043D\u0435\u043D\u0430\u0439\u0434\u0435\u043D"
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 176194}
+  m_IsPrefabParent: 1
