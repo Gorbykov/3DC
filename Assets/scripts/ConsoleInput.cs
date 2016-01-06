@@ -239,7 +239,7 @@ public class ConsoleInput : MonoBehaviour
 			}
 			//*/
             okButton = false;
-            Cam.enabled = true;
+            //Cam.enabled = true;
         }
     }
 }

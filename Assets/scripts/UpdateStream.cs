@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 
@@ -30,24 +29,10 @@ public class UpdateStream : MonoBehaviour
         {
             ChargeSyns chS = chPanel.GetComponent<ChargeSyns>();
             chS.needUpdateIn();
-            Debug.Log("PanelUpdate "+chPanel.name);
+            Debug.Log("PanelUpdate " + chPanel.name);
         }
     }
 
-    public void OpClMenu()
-    {
-        menuState = !menuState;
-        if (menuState)
-        {
-            listCh.SetBool("isOpen", true);
-            CamLock();
-        }
-        else
-        {
-            listCh.SetBool("isOpen", false);
-            CamUnlock();
-        }
-    }
 
     public void CamLock()
     {
@@ -57,6 +42,24 @@ public class UpdateStream : MonoBehaviour
     public void CamUnlock()
     {
         camContr.enabled = true;
+    }
+
+
+    public void OpClMenu()
+    {
+        menuState = !menuState;
+        if (menuState)
+        {
+            listCh.SetBool("isOpen", true);
+            CamLock();
+            Debug.Log("Cam lock");
+        }
+        else
+        {
+            listCh.SetBool("isOpen", false);
+            CamUnlock();
+            Debug.Log("Cam unlock");
+        }
     }
 
     void Update()
