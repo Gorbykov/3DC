@@ -9,6 +9,7 @@ public class UpdateStream : MonoBehaviour
     public Animator listCh;
     public bool menuState = true;
     public CameraControl camContr;
+    public GameObject XYZ;
 
     public void New()
     {

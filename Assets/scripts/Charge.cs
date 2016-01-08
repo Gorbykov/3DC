@@ -19,6 +19,7 @@ public class Charge : MonoBehaviour
     public Rigidbody rb;
     public bool needUpdate = false;
     public UpdateStream upStr;
+    public GameObject XYZ;
     Text titleText;
     GameObject[] charges;
     GameObject target;
@@ -46,6 +47,7 @@ public class Charge : MonoBehaviour
         ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
         ChS.targetChGo = gameObject;
         ChS.targetCh = this;
+        XYZ = upStr.XYZ;
         //ChS.needUpdateIn();
     }
 
@@ -113,7 +115,7 @@ public class Charge : MonoBehaviour
             oldPos = transform.position;
             oldQ = q;
             upStr.UpdateCharges();
-        }       
+        }
         if (needUpdate)
         {
             UpdateCharge();
@@ -123,29 +125,34 @@ public class Charge : MonoBehaviour
         Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
         if (!isTitleCreate)
         {
-            //Debug.Log(screenPosition.ToString()+"   "+cameraRelative.ToString());
-            if (cameraRelative.z > 0)
-            {
-                title = Instantiate(title, new Vector3(screenPosition.x, Screen.height - screenPosition.y, 0), transform.rotation) as GameObject;
-                title.transform.parent = canvas.transform;
-                titleText = title.GetComponent<Text>();
-                //titleText.text = (name+"\n"+(f.magnitude).ToString()+" ГH");
-                isTitleCreate = true;
-                title.transform.SetAsFirstSibling();
-                //Rect position = new Rect(screenPosition.x, Screen.height - screenPosition.y, 200f, 50f);
-                //GUI.Label(position, name+"\n"+(f.magnitude).ToString()+" ГH", style);
-            }
+            title = Instantiate(title, new Vector3(screenPosition.x, Screen.height - screenPosition.y, 0), transform.rotation) as GameObject;
+            title.transform.SetParent(canvas.transform);
+            titleText = title.GetComponent<Text>();
+            //titleText.text = (name+"\n"+(f.magnitude).ToString()+" ГH");
+            isTitleCreate = true;
+            title.transform.SetAsFirstSibling();
+            //Rect position = new Rect(screenPosition.x, Screen.height - screenPosition.y, 200f, 50f);
+            //GUI.Label(position, name+"\n"+(f.magnitude).ToString()+" ГH", style);
         }
         else
         {
-            title.transform.position = new Vector3(screenPosition.x,/*Screen.height -*/ screenPosition.y, 0);
-            if (q != 0)
+            if (cameraRelative.z > 0)
             {
-                titleText.text = (name/* + "=" + q + "\n" + "F=" + (f.magnitude).ToString() + " ГH" + "\n" + "E=" + (f.magnitude / q).ToString() + "ГВ/м"*/);
+                title.SetActive(true);
+                title.transform.position = new Vector3(screenPosition.x,/*Screen.height -*/ screenPosition.y, 0);
+                //Debug.Log(cameraRelative.ToString());
+                if (q != 0)
+                {
+                    titleText.text = (name/* + "=" + q + "\n" + "F=" + (f.magnitude).ToString() + " ГH" + "\n" + "E=" + (f.magnitude / q).ToString() + "ГВ/м"*/);
+                }
+                else
+                {
+                    titleText.text = (name + "\n" + "E=" + (f.magnitude).ToString() + " ГДж" + "\n" + "fi=" + fi);
+                }
             }
             else
             {
-                titleText.text = (name + "\n" + "E=" + (f.magnitude).ToString() + " ГДж" + "\n" + "fi=" + fi);
+                title.SetActive(false);
             }
         }
         //Зачаток физики
@@ -174,10 +181,21 @@ public class Charge : MonoBehaviour
 	}*/
     void OnDestroy()
     {
-        upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
+        XYZ.transform.SetParent(upStr.gameObject.transform.parent);
+        XYZ.SetActive(false);
+        //upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
         upStr.UpdateCharges();
-        Debug.Log("try to update from " + name);
         Destroy(panel);
         Destroy(title);
+    }
+
+    void OnMouseDown()
+    {
+        Debug.Log("Click on " + name);
+        XYZ.transform.position = Vector3.zero;
+        XYZ.transform.SetParent(transform,true);
+        XYZ.transform.position = transform.position;
+        //XYZ.SetActive(false);
+        XYZ.SetActive(true);
     }
 }
