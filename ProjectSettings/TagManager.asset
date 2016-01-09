@@ -6,6 +6,7 @@ TagManager:
   tags:
   - isCharge
   - chSyn
+  - isStruct
   layers:
   - Default
   - TransparentFX
