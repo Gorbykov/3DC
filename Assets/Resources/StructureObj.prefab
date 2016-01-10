@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &146678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 453326}
+  - 114: {fileID: 11477328}
+  m_Layer: 0
+  m_Name: StructureObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &453326
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 146678}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11477328
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 146678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c059dafa03f4f499f7319481c59a00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  q: 1
+  type: 1
+  arg: -1-5
+  polandArr: []
+  error: 
+  needUpdate: 1
+  charges: []
+  minx: 0
+  miny: 0
+  minz: 0
+  maxx: 0
+  maxy: 0
+  maxz: 0
+  delta: 0
+  prefCharge: {fileID: 165016, guid: 3445e829857a97f4f8b6bcae902f8f62, type: 2}
+  upStr: {fileID: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: arg
+      value: -1-5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: needUpdate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: prefCharge
+      value: 
+      objectReference: {fileID: 165016, guid: 3445e829857a97f4f8b6bcae902f8f62, type: 2}
+    - target: {fileID: 0}
+      propertyPath: prefChargeIn
+      value: 
+      objectReference: {fileID: 165016, guid: 3445e829857a97f4f8b6bcae902f8f62, type: 2}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 146678}
+  m_IsPrefabParent: 1

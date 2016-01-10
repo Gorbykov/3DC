@@ -50,7 +50,7 @@ public class ConsoleInput : MonoBehaviour
         }
     }
 
-    void sendOut(string outStr)
+    public void sendOut(string outStr)
     {
         for (int i = outFields.Length - 2; i >= 0; i--)
         {

@@ -20,6 +20,7 @@ public class Charge : MonoBehaviour
     public bool needUpdate = false;
     public UpdateStream upStr;
     public GameObject XYZ;
+    public bool isSilent = false;
     Text titleText;
     GameObject[] charges;
     GameObject target;
@@ -36,17 +37,20 @@ public class Charge : MonoBehaviour
         gameObject.tag = "isCharge";
         canvas = GameObject.Find("Canvas");
         upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
-        upStr.UpdateCharges();
-        Debug.Log("try to update from " + name);
-        oldQ = q;
-        oldPos = transform.position;
-        panel = Instantiate(prefPanel);
-        Content = GameObject.Find("Content");
-        panel.transform.SetParent(Content.transform);
-        panel.transform.SetAsFirstSibling();
-        ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
-        ChS.targetChGo = gameObject;
-        ChS.targetCh = this;
+        if (!isSilent)
+        {
+            upStr.UpdateCharges();
+            Debug.Log("try to update from " + name);
+            oldQ = q;
+            oldPos = transform.position;
+            panel = Instantiate(prefPanel);
+            Content = GameObject.Find("Content");
+            panel.transform.SetParent(Content.transform);
+            panel.transform.SetAsLastSibling();
+            ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
+            ChS.targetChGo = gameObject;
+            ChS.targetCh = this;
+        }
         XYZ = upStr.XYZ;
         //ChS.needUpdateIn();
     }
@@ -104,8 +108,11 @@ public class Charge : MonoBehaviour
         //Debug.Log(arrow.transform.rotation);
         //Debug.DrawLine(transform.position,transform.position+f*scale, Color.green);
         //needUpdate = false;
-        ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
-        ChS.needUpdateIn();
+        if (!isSilent)
+        {
+            ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
+            ChS.needUpdateIn();
+        }
     }
 
     void Update()
@@ -114,7 +121,10 @@ public class Charge : MonoBehaviour
         {
             oldPos = transform.position;
             oldQ = q;
-            upStr.UpdateCharges();
+            if (!isSilent)
+            {
+                upStr.UpdateCharges();
+            }
         }
         if (needUpdate)
         {
@@ -193,7 +203,7 @@ public class Charge : MonoBehaviour
     {
         Debug.Log("Click on " + name);
         XYZ.transform.position = Vector3.zero;
-        XYZ.transform.SetParent(transform,true);
+        XYZ.transform.SetParent(transform, true);
         XYZ.transform.position = transform.position;
         //XYZ.SetActive(false);
         XYZ.SetActive(true);

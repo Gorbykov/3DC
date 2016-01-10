@@ -11,25 +11,37 @@ public class Structure : MonoBehaviour
     public string arg = "x";
     public StringCollection arr = new StringCollection();
     public string[] polandArr;
-    public string err = "";
+    public string error = "";
     public bool needUpdate = true;
+    public List<GameObject> charges;
+    public float minx, miny, minz, maxx, maxy, maxz, delta;
+    public GameObject prefCharge;
+    public UpdateStream upStr;
+    ConsoleInput console;
 
     void strToArr()
     {
         bool waitChar = false;
         arg.ToLower();
+        arr = new StringCollection();
         //int j = 0;
         for (int i = 0; i < arg.Length; i++)
         {
             if (((arg[i] >= 'a') && (arg[i] <= 'z')) || ((arg[i] >= '0') && (arg[i] <= '9')) || arg[i] == '.')
             {
-                if (waitChar)
+                if (waitChar && (arr[arr.Count - 1] != "-"))
                     arr[arr.Count - 1] += arg[i];
                 else
                 {
                     arr.Add(arg[i] + "");
                     waitChar = true;
                 }
+            }
+            else
+                if ((arg[i] == '-') && ((i == 0) || ((arg[i - 1] < '0') || (arg[i - 1] > '9'))))
+            {
+                arr.Add("unmin");
+                //waitChar = true;
             }
             else
             {
@@ -119,12 +131,12 @@ public class Structure : MonoBehaviour
                         if (peek == "(")
                     {
                         state = 0;
-                        err += "wrong(), ";
+                        error += "wrong(), ";
                     }
                     else
                     {
                         state = 0;
-                        err += "unknown symbol,";
+                        error += "unknown symbol,";
                     }
                 }
             }
@@ -136,7 +148,7 @@ public class Structure : MonoBehaviour
     {
         Stack<string> p = new Stack<string>();
         float a, b, c;
-        for (int i = polandArr.Length-1; i >= 0; i--)
+        for (int i = polandArr.Length - 1; i >= 0; i--)
         {
             if (float.TryParse(polandArr[i], out a))
             {
@@ -176,7 +188,7 @@ public class Structure : MonoBehaviour
                         c = Mathf.Pow(a, b);
                         break;
                     default:
-                        err += "unknown binary operation, ";
+                        error += "unknown binary operation, ";
                         break;
                 }
                 p.Push(c.ToString());
@@ -206,14 +218,17 @@ public class Structure : MonoBehaviour
                     case "abs":
                         c = Mathf.Abs(a);
                         break;
+                    case "unmin":
+                        c = -a;
+                        break;
                     default:
-                        err += "unknown unary operation(func), ";
+                        error += "unknown unary operation(func), ";
                         break;
                 }
                 p.Push(c.ToString());
             }
             else
-                err += "uncknown symbol, ";
+                error += "uncknown symbol, ";
         }
         if (float.TryParse(p.Pop(), out c))
         {
@@ -221,7 +236,7 @@ public class Structure : MonoBehaviour
         }
         else
         {
-            err += "calc err, ";
+            error += "calc err, ";
             return -1;
         }
     }
@@ -229,12 +244,20 @@ public class Structure : MonoBehaviour
     void Start()
     {
         tag = "isStruct";
+        upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
+        console = GameObject.Find("ConsoleControl").GetComponent<ConsoleInput>();
     }
 
-    public void UpdateStruct()
+    public IEnumerator UpdateStruct()
     {
         strToArr();
+        yield return null;
         arrToPoland();
+        if (error.Length > 0)
+        {
+            console.sendOut(error);
+            yield break;
+        }
         string st = "";
         foreach (string el in polandArr)
         {
@@ -246,7 +269,31 @@ public class Structure : MonoBehaviour
         {
             st += el + " ";
         }
-        Debug.Log("arr: " + st + "=" + Calc(1,2).ToString());
+        Debug.Log("arr: " + st + "=" + Calc(2, 3).ToString());
+        float z;
+        for (float x = minx; x < maxx; x += delta)
+        {
+            for (float y = miny; y < maxx; y += delta)
+            {
+                z = Calc(x, y);
+                if (!float.IsInfinity(z) && !float.IsNaN(z) && ((z <= maxz) && (z >= minz)))
+                {
+                    charges.Add(Instantiate(prefCharge, new Vector3(x, y, z), transform.rotation) as GameObject);
+                    charges[charges.Count - 1].name = "";
+                    Charge charge = charges[charges.Count - 1].GetComponent<Charge>();
+                    charge.isSilent = true;
+                    charges[charges.Count - 1].transform.SetParent(transform);
+                    yield return null;
+                }
+            }
+        }
+        foreach (GameObject el in charges)
+        {
+            Charge ch = el.GetComponent<Charge>();
+            ch.q = q / charges.Count;
+            yield return null;
+        }
+        upStr.UpdateCharges();
     }
 
     // Update is called once per frame
@@ -254,8 +301,8 @@ public class Structure : MonoBehaviour
     {
         if (needUpdate)
         {
-            UpdateStruct();
             needUpdate = false;
+            StartCoroutine(UpdateStruct());
         }
 
     }

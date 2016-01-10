@@ -157,7 +157,7 @@ MonoBehaviour:
   title: {fileID: 188572, guid: 38a49da87924b414ebbb0d5393f5e070, type: 2}
   k: 9
   scale: 5
-  q: 1
+  q: -0.1
   plus: {fileID: 2800000, guid: a680d3e4721760840b95951c83690835, type: 3}
   minus: {fileID: 2800000, guid: 730ea25de15107f49b391b621427478b, type: 3}
   f: {x: 0, y: 0, z: 0}
@@ -168,6 +168,7 @@ MonoBehaviour:
   needUpdate: 0
   upStr: {fileID: 0}
   XYZ: {fileID: 0}
+  isSilent: 0
 --- !u!135 &13565016
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -210,6 +211,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: isSilent
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

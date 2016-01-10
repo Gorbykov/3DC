@@ -102,7 +102,7 @@ GameObject:
   - 114: {fileID: 11434404}
   - 114: {fileID: 11434754}
   m_Layer: 5
-  m_Name: ChagePanel
+  m_Name: ChargePanel
   m_TagString: chSyn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
