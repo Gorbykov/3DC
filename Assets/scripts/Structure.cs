@@ -10,8 +10,8 @@ public class Structure : MonoBehaviour
     public int type = 1;
     public string arg = "x";
     public StringCollection arr = new StringCollection();
-    public Stack<string> poland = new Stack<string>();
-    string err = "";
+    public string[] polandArr;
+    public string err = "";
     public bool needUpdate = true;
 
     void strToArr()
@@ -43,21 +43,22 @@ public class Structure : MonoBehaviour
     void arrToPoland()
     {
         Stack<string> operations = new Stack<string>();
+        Stack<string> poland = new Stack<string>();
         operations.Push("-1");
         int state = 2;
         int i = 0;
-        int buf;
+        float buf;
         while (state == 2)
         {
             string peek = operations.Peek();
-            if (int.TryParse(arr[i], out buf) || (arr[i] == "x") || (arr[i] == "y"))
+            if (float.TryParse(arr[i], out buf) || (arr[i] == "x") || (arr[i] == "y"))
             {
                 poland.Push(arr[i]);
                 i++;
             }
             else
             {
-                if ((arr[i] == "+") || (arr[i] == "-") || (arr[i].Length>=2))
+                if ((arr[i] == "+") || (arr[i] == "-") || (arr[i].Length >= 2))
                 {
                     if ((peek == "-1") || (peek == "("))
                     {
@@ -118,18 +119,113 @@ public class Structure : MonoBehaviour
                         if (peek == "(")
                     {
                         state = 0;
-                        err += "wrong() ";
+                        err += "wrong(), ";
                     }
                     else
                     {
                         state = 0;
-                        err += "unknown symbol";
+                        err += "unknown symbol,";
                     }
                 }
             }
         }
+        polandArr = poland.ToArray();
     }
-    // Use this for initialization
+
+    float Calc(float x, float y)
+    {
+        Stack<string> p = new Stack<string>();
+        float a, b, c;
+        for (int i = polandArr.Length-1; i >= 0; i--)
+        {
+            if (float.TryParse(polandArr[i], out a))
+            {
+                p.Push(polandArr[i]);
+            }
+            else
+                if (polandArr[i] == "x")
+            {
+                p.Push(x.ToString());
+            }
+            else
+                if (polandArr[i] == "y")
+            {
+                p.Push(y.ToString());
+            }
+            else
+                if (polandArr[i].Length == 1)
+            {
+                b = float.Parse(p.Pop());
+                a = float.Parse(p.Pop());
+                c = 0;
+                switch (polandArr[i])
+                {
+                    case "+":
+                        c = a + b;
+                        break;
+                    case "-":
+                        c = a - b;
+                        break;
+                    case "*":
+                        c = a * b;
+                        break;
+                    case "/":
+                        c = a / b;
+                        break;
+                    case "^":
+                        c = Mathf.Pow(a, b);
+                        break;
+                    default:
+                        err += "unknown binary operation, ";
+                        break;
+                }
+                p.Push(c.ToString());
+            }
+            else
+                if (polandArr[i].Length > 1)
+            {
+                a = float.Parse(p.Pop());
+                c = 0;
+                switch (polandArr[i])
+                {
+                    case "sqrt":
+                        c = Mathf.Sqrt(a);
+                        break;
+                    case "sin":
+                        c = Mathf.Sin(a);
+                        break;
+                    case "cos":
+                        c = Mathf.Cos(a);
+                        break;
+                    case "tg":
+                        c = Mathf.Tan(a);
+                        break;
+                    case "ctg":
+                        c = 1 / Mathf.Tan(a);
+                        break;
+                    case "abs":
+                        c = Mathf.Abs(a);
+                        break;
+                    default:
+                        err += "unknown unary operation(func), ";
+                        break;
+                }
+                p.Push(c.ToString());
+            }
+            else
+                err += "uncknown symbol, ";
+        }
+        if (float.TryParse(p.Pop(), out c))
+        {
+            return c;
+        }
+        else
+        {
+            err += "calc err, ";
+            return -1;
+        }
+    }
+
     void Start()
     {
         tag = "isStruct";
@@ -139,15 +235,18 @@ public class Structure : MonoBehaviour
     {
         strToArr();
         arrToPoland();
-        /*while (poland.Count!=0)//Дебаг польского стека и массива
+        string st = "";
+        foreach (string el in polandArr)
         {
-            Debug.Log(poland.Pop().ToString());
+            st += el + " ";
         }
-        Debug.Log("arr");
+        Debug.Log("poland: " + st);
+        st = "";
         foreach (string el in arr)
         {
-            Debug.Log(el.ToString());
-        }*/
+            st += el + " ";
+        }
+        Debug.Log("arr: " + st + "=" + Calc(1,2).ToString());
     }
 
     // Update is called once per frame
