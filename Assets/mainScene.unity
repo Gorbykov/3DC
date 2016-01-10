@@ -8729,7 +8729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   q: 1
   type: 1
-  arg: 2+2
+  arg: x^2
   needUpdate: 1
 --- !u!4 &2002101072
 Transform:

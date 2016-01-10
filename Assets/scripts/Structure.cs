@@ -8,7 +8,7 @@ public class Structure : MonoBehaviour
 
     public float q = 1;
     public int type = 1;
-    public string arg = "x/2+3";
+    public string arg = "x";
     public StringCollection arr = new StringCollection();
     public Stack<string> poland = new Stack<string>();
     string err = "";
@@ -50,14 +50,14 @@ public class Structure : MonoBehaviour
         while (state == 2)
         {
             string peek = operations.Peek();
-            if (int.TryParse(arr[i], out buf))
+            if (int.TryParse(arr[i], out buf) || (arr[i] == "x") || (arr[i] == "y"))
             {
                 poland.Push(arr[i]);
                 i++;
             }
             else
             {
-                if ((arr[i] == "+") || (arr[i] == "-"))
+                if ((arr[i] == "+") || (arr[i] == "-") || (arr[i].Length>=2))
                 {
                     if ((peek == "-1") || (peek == "("))
                     {
@@ -65,15 +65,15 @@ public class Structure : MonoBehaviour
                         i++;
                     }
                     else
-                    if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/"))
+                    if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
                     {
                         poland.Push(operations.Pop());
                     }
                 }
                 else
-                    if ((arr[i] == "*") || (arr[i] == "/"))
+                    if ((arr[i] == "*") || (arr[i] == "/") || (arr[i] == "^"))
                 {
-                    if ((peek == "-1") || (peek == "(") || (peek == "+") || (peek == "-"))
+                    if ((peek == "-1") || (peek == "(") || (peek == "+") || (peek == "-") || (peek.Length >= 2))
                     {
                         operations.Push(arr[i]);
                         i++;
@@ -95,7 +95,7 @@ public class Structure : MonoBehaviour
                     if (peek == "-1")
                         state = 0;
                     else
-                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/"))
+                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
                     {
                         poland.Push(operations.Pop());
                     }
@@ -112,7 +112,7 @@ public class Structure : MonoBehaviour
                     if (peek == "-1")
                         state = 1;
                     else
-                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/"))
+                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
                         poland.Push(operations.Pop());
                     else
                         if (peek == "(")
