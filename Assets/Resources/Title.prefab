@@ -50,9 +50,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'New Text
-
-    sdfgagsf'
+  m_Text: 
 --- !u!114 &11438354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -100,6 +98,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_SizeDelta.y
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Text
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

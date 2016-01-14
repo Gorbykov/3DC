@@ -22,7 +22,7 @@ public class Charge : MonoBehaviour
     public GameObject XYZ;
     public bool isSilent = false;
     Text titleText;
-    GameObject[] charges;
+    //GameObject[] charges;
     GameObject target;
     Transform arrow;
     bool isTitleCreate = false;
@@ -32,6 +32,12 @@ public class Charge : MonoBehaviour
     //public GUIStyle style= new GUIStyle();
     //Transform target = new Transform();
     // Use this for initialization
+
+    void OnEnable()
+    {
+        UpdateStream.OnUpdateCharges += UpdateCharge;
+    }
+
     void Start()
     {
         gameObject.tag = "isCharge";
@@ -55,28 +61,31 @@ public class Charge : MonoBehaviour
         //ChS.needUpdateIn();
     }
 
-    void UpdateCharge()
+    void UpdateCharge(GameObject[] charges)
     {
+        if(this==null)
+        {
+            return;
+        }
         //Наложение текстур
         /*if (isUpdated)
         {
             return;
         }*/
         //isUpdated = true;
-        Debug.Log(name + " updated");
+        //Debug.Log(name + " updated");
         if (q > 0)
             GetComponent<Renderer>().material.SetTexture("_MainTex", plus);
         else
             GetComponent<Renderer>().material.SetTexture("_MainTex", minus);
         //transform.localScale = new Vector3(Mathf.Abs(q), Mathf.Abs(q), Mathf.Abs(q));//Масштаб по величене заряда
-        //
+        //-10
         //Просчет силы кулона и всего остального
         f = Vector3.zero;
         fi = 0f;
-        charges = GameObject.FindGameObjectsWithTag("isCharge");//оптимизировать!!//вынесено в отдельную функцию
         foreach (GameObject charge in charges)
         {
-            if (transform.position != charge.transform.position)
+            if ((transform.position != charge.transform.position) && (charge!=null))
             {
                 Charge chs = charge.GetComponent<Charge>();
                 //chs.UpdateCharge();
@@ -117,65 +126,69 @@ public class Charge : MonoBehaviour
 
     void Update()
     {
-        if ((!oldPos.Equals(transform.position)) || (!oldQ.Equals(q)))
-        {
-            oldPos = transform.position;
-            oldQ = q;
-            if (!isSilent)
-            {
-                upStr.UpdateCharges();
-            }
-        }
-        if (needUpdate)
+
+        /*if (needUpdate)
         {
             UpdateCharge();
             needUpdate = false;
-        }
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
-        if (!isTitleCreate)
+        }*/
+        if (!isSilent)
         {
-            title = Instantiate(title, new Vector3(screenPosition.x, Screen.height - screenPosition.y, 0), transform.rotation) as GameObject;
-            title.transform.SetParent(canvas.transform);
-            titleText = title.GetComponent<Text>();
-            //titleText.text = (name+"\n"+(f.magnitude).ToString()+" ГH");
-            isTitleCreate = true;
-            title.transform.SetAsFirstSibling();
-            //Rect position = new Rect(screenPosition.x, Screen.height - screenPosition.y, 200f, 50f);
-            //GUI.Label(position, name+"\n"+(f.magnitude).ToString()+" ГH", style);
-        }
-        else
-        {
-            if (cameraRelative.z > 0)
+            if ((!oldPos.Equals(transform.position)) || (!oldQ.Equals(q)))
             {
-                title.SetActive(true);
-                title.transform.position = new Vector3(screenPosition.x,/*Screen.height -*/ screenPosition.y, 0);
-                //Debug.Log(cameraRelative.ToString());
-                if (q != 0)
+                oldPos = transform.position;
+                oldQ = q;
+                if (!isSilent)
                 {
-                    titleText.text = (name/* + "=" + q + "\n" + "F=" + (f.magnitude).ToString() + " ГH" + "\n" + "E=" + (f.magnitude / q).ToString() + "ГВ/м"*/);
+                    upStr.UpdateCharges();
                 }
-                else
-                {
-                    titleText.text = (name + "\n" + "E=" + (f.magnitude).ToString() + " ГДж" + "\n" + "fi=" + fi);
-                }
+            }
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
+            if (!isTitleCreate)
+            {
+                title = Instantiate(title, new Vector3(screenPosition.x, Screen.height - screenPosition.y, 0), transform.rotation) as GameObject;
+                title.transform.SetParent(canvas.transform);
+                titleText = title.GetComponent<Text>();
+                //titleText.text = (name+"\n"+(f.magnitude).ToString()+" ГH");
+                isTitleCreate = true;
+                title.transform.SetAsFirstSibling();
+                //Rect position = new Rect(screenPosition.x, Screen.height - screenPosition.y, 200f, 50f);
+                //GUI.Label(position, name+"\n"+(f.magnitude).ToString()+" ГH", style);
             }
             else
             {
-                title.SetActive(false);
+                if (cameraRelative.z > 0)
+                {
+                    title.SetActive(true);
+                    title.transform.position = new Vector3(screenPosition.x,/*Screen.height -*/ screenPosition.y, 0);
+                    //Debug.Log(cameraRelative.ToString());
+                    if (q != 0)
+                    {
+                        titleText.text = (name/* + "=" + q + "\n" + "F=" + (f.magnitude).ToString() + " ГH" + "\n" + "E=" + (f.magnitude / q).ToString() + "ГВ/м"*/);
+                    }
+                    else
+                    {
+                        titleText.text = (name + "\n" + "E=" + (f.magnitude).ToString() + " ГДж" + "\n" + "fi=" + fi);
+                    }
+                }
+                else
+                {
+                    title.SetActive(false);
+                }
             }
-        }
-        //Зачаток физики
-        if (phisOn)
-        {
-            if (rb == null)
+            //Зачаток физики
+            if (phisOn)
             {
-                rb = GetComponent<Rigidbody>();
-                rb.mass = q;
+                if (rb == null)
+                {
+                    rb = GetComponent<Rigidbody>();
+                    rb.mass = q;
+                }
+                rb.velocity += f;
             }
-            rb.velocity += f;
+            //
         }
-        //
     }
     //куски мертвого кода
     /*void OnGUI()
@@ -191,21 +204,33 @@ public class Charge : MonoBehaviour
 	}*/
     void OnDestroy()
     {
-        XYZ.transform.SetParent(upStr.gameObject.transform.parent);
-        XYZ.SetActive(false);
-        //upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
-        upStr.UpdateCharges();
-        Destroy(panel);
-        Destroy(title);
+        if (XYZ.transform.parent==transform)
+        {
+            XYZ.transform.SetParent(upStr.gameObject.transform.parent);
+            XYZ.SetActive(false);
+            //upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
+            if (!isSilent)
+            {
+                upStr.UpdateCharges();
+                Destroy(panel);
+                Destroy(title);
+            }
+        }
     }
 
     void OnMouseDown()
     {
         Debug.Log("Click on " + name);
         XYZ.transform.position = Vector3.zero;
-        XYZ.transform.SetParent(transform, true);
+        XYZ.transform.SetParent(transform.root, true);
+        //XYZ.transform.position = transform.root.position;
         XYZ.transform.position = transform.position;
         //XYZ.SetActive(false);
         XYZ.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        UpdateStream.OnUpdateCharges += UpdateCharge;
     }
 }

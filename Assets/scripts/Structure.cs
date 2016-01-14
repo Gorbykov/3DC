@@ -18,6 +18,23 @@ public class Structure : MonoBehaviour
     public GameObject prefCharge;
     public UpdateStream upStr;
     ConsoleInput console;
+    GameObject panel;
+    public GameObject Content;
+    public GameObject prefPanel;
+
+    void Start()
+    {
+        tag = "isStruct";
+        upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
+        console = GameObject.Find("ConsoleControl").GetComponent<ConsoleInput>();
+        panel = Instantiate(prefPanel);
+        Content = GameObject.Find("Content");
+        panel.transform.SetParent(Content.transform);
+        panel.transform.SetAsLastSibling();
+        StructureSyns StructS = panel.GetComponent<StructureSyns>();
+        StructS.targetStructGo = gameObject;
+        StructS.targetStruct = this;
+    }
 
     void strToArr()
     {
@@ -241,23 +258,26 @@ public class Structure : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        tag = "isStruct";
-        upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
-        console = GameObject.Find("ConsoleControl").GetComponent<ConsoleInput>();
-    }
-
     public IEnumerator UpdateStruct()
     {
+        foreach (GameObject el in charges)
+        {
+            Destroy(el);
+        }
+        charges = new List<GameObject>();
         strToArr();
-        yield return null;
-        arrToPoland();
-        if (error.Length > 0)
+        /*if (error != "")
         {
             console.sendOut(error);
             yield break;
         }
+        yield return null;*/
+        arrToPoland();
+        /*if (error != "")
+        {
+            console.sendOut(error);
+            yield break;
+        }*/
         string st = "";
         foreach (string el in polandArr)
         {
@@ -278,22 +298,28 @@ public class Structure : MonoBehaviour
                 z = Calc(x, y);
                 if (!float.IsInfinity(z) && !float.IsNaN(z) && ((z <= maxz) && (z >= minz)))
                 {
-                    charges.Add(Instantiate(prefCharge, new Vector3(x, y, z), transform.rotation) as GameObject);
+                    charges.Add(Instantiate(prefCharge, new Vector3(x, y, z)+transform.position, transform.rotation) as GameObject);
                     charges[charges.Count - 1].name = "";
                     Charge charge = charges[charges.Count - 1].GetComponent<Charge>();
                     charge.isSilent = true;
                     charges[charges.Count - 1].transform.SetParent(transform);
-                    yield return null;
+                    //yield return null;
                 }
             }
         }
+        //yield return null;
         foreach (GameObject el in charges)
         {
-            Charge ch = el.GetComponent<Charge>();
-            ch.q = q / charges.Count;
-            yield return null;
+            if (el != null)
+            {
+                Charge ch = el.GetComponent<Charge>();
+                ch.q = q / charges.Count;
+            }
+            //yield return null;
         }
+        yield return null;
         upStr.UpdateCharges();
+        yield break;
     }
 
     // Update is called once per frame
@@ -305,5 +331,10 @@ public class Structure : MonoBehaviour
             StartCoroutine(UpdateStruct());
         }
 
+    }
+    
+    void OnDestoy()
+    {
+        Destroy(panel);
     }
 }

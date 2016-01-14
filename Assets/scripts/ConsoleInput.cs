@@ -10,6 +10,8 @@ public class ConsoleInput : MonoBehaviour
     public Text[] outFields;
     public GameObject newCharge;
     public GameObject prefCharge;
+    public GameObject newStructure;
+    public GameObject prefStructure;
     public bool okButton = false;
     public string[] commandList;
     public string[] errorList;
@@ -98,6 +100,50 @@ public class ConsoleInput : MonoBehaviour
         sendOut('/' + argv[0] + ' ' + name + ' ' + q.ToString() + ' ' + x.ToString() + ' ' + y.ToString() + ' ' + z.ToString());
     }
 
+    void addStruct()
+    {
+        if (argc != 13)
+        {
+            sendOut(errorList[1] + '"' + argv[0] + '"');
+            return;
+        }
+        bool error = true;
+        float x, y, z, q, minx, miny, minz, maxx, maxy, maxz, delta;
+        string name ,arg;
+        name = argv[1];
+        arg = argv[2];
+        error = float.TryParse(argv[3], out q);
+        error = float.TryParse(argv[4], out x);
+        error = float.TryParse(argv[5], out y);
+        error = float.TryParse(argv[6], out z);
+        error = float.TryParse(argv[7], out minx);
+        error = float.TryParse(argv[8], out miny);
+        error = float.TryParse(argv[9], out minz);
+        error = float.TryParse(argv[10], out maxx);
+        error = float.TryParse(argv[11], out maxy);
+        error = float.TryParse(argv[12], out maxz);
+        error = float.TryParse(argv[13], out delta);
+        if (!error)
+        {
+            sendOut(errorList[2] + '"' + argv[0] + '"');
+            return;
+        }
+        //Debug.Log(name+q.ToString()+x.ToString()+y.ToString()+z.ToString());
+        newStructure = Instantiate(prefStructure, new Vector3(x, y, z), transform.rotation) as GameObject;
+        Structure str = newStructure.GetComponent<Structure>();
+        str.q = q;
+        str.name = name;
+        str.minx = minx;
+        str.miny = miny;
+        str.minz = minz;
+        str.delta = delta;
+        str.maxx = maxx;
+        str.maxy = maxy;
+        str.maxz = maxz;
+        str.arg = arg;
+        sendOut('/' + argv[0] + ' ' + name + ' ' + q.ToString() + ' ' + x.ToString() + ' ' + y.ToString() + ' ' + z.ToString());
+    }
+
     void remove()
     {
         if (argc != 1)
@@ -113,7 +159,7 @@ public class ConsoleInput : MonoBehaviour
             sendOut(errorList[3]);
             return;
         }
-        Destroy(delCharge.GetComponent<Charge>().title);
+        //Destroy(delCharge.GetComponent<Charge>().title);
         Destroy(delCharge);
         sendOut('/' + argv[0] + ' ' + name);
     }

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-
 
 public class UpdateStream : MonoBehaviour
 {
@@ -10,6 +10,9 @@ public class UpdateStream : MonoBehaviour
     public bool menuState = true;
     public CameraControl camContr;
     public GameObject XYZ;
+    public delegate void UpdateAction(GameObject[] charges);
+    public static event UpdateAction OnUpdateCharges;
+    public Transform addButton;
 
     public void New()
     {
@@ -18,12 +21,25 @@ public class UpdateStream : MonoBehaviour
 
     public void UpdateCharges()
     {
+        //StartCoroutine("UpdateChargesEnum");
+        GameObject[] charges;
+        charges = GameObject.FindGameObjectsWithTag("isCharge");
+        if (OnUpdateCharges!=null)
+            OnUpdateCharges(charges);
+    }
+
+    /*IEnumerator UpdateChargesEnum()
+    {
         Debug.Log("Update all");
+        yield return null;
         GameObject[] charges = GameObject.FindGameObjectsWithTag("isCharge");
         foreach (GameObject charge in charges)
         {
             Charge chs = charge.GetComponent<Charge>();
             chs.needUpdate = true;
+            Debug.Log(Time.time.ToString());
+            if (Time.time > 0.015f)
+                yield return null;
         }
         GameObject[] chPanels = GameObject.FindGameObjectsWithTag("chSyn");
         foreach (GameObject chPanel in chPanels)
@@ -32,7 +48,8 @@ public class UpdateStream : MonoBehaviour
             chS.needUpdateIn();
             Debug.Log("PanelUpdate " + chPanel.name);
         }
-    }
+        yield break;
+    }*/
 
 
     public void CamLock()
@@ -65,6 +82,7 @@ public class UpdateStream : MonoBehaviour
 
     void Update()
     {
+        addButton.SetAsLastSibling();
         //отклучение интерфейса
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
