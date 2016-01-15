@@ -111,7 +111,7 @@ public class ConsoleInput : MonoBehaviour
         }
         bool error = true;
         float x, y, z, q, minx, miny, minz, maxx, maxy, maxz, delta;
-        string name ,arg;
+        string name, arg;
         name = argv[1];
         arg = argv[2];
         error = float.TryParse(argv[3], out q);
@@ -156,7 +156,10 @@ public class ConsoleInput : MonoBehaviour
         name = argv[1];
         GameObject delCharge = GameObject.Find(name);
         Debug.Log(delCharge.ToString());
-        if ((delCharge == null) || (delCharge.GetComponent<Charge>() == null))
+        bool flag = false;
+        flag = delCharge.tag == "isCharge";
+        flag = flag ^ (delCharge.tag == "isStruct");
+        if ((delCharge == null) && flag)
         {
             sendOut(errorList[3]);
             return;
@@ -210,32 +213,32 @@ public class ConsoleInput : MonoBehaviour
             inString = inField.text;//+' #';
             inField.text = "";
             //Debug.Log(inString);
-            if (inString[0] == '/')
-            {
-                inString += " endl ";
-                argv = new string[100];
-                argc = 0;
-                //string command;
-                argv[0] = GetWord(ref inString);
-                argv[0] = argv[0].Remove(0, 1);
-                while (argv[argc] != "endl")
+            if (inString != "")
+                if (inString[0] == '/')
                 {
-                    argc++;
-                    argv[argc] = GetWord(ref inString);
+                    inString += " endl ";
+                    argv = new string[100];
+                    argc = 0;
+                    //string command;
+                    argv[0] = GetWord(ref inString);
+                    argv[0] = argv[0].Remove(0, 1);
+                    while (argv[argc] != "endl")
+                    {
+                        argc++;
+                        argv[argc] = GetWord(ref inString);
+                    }
+                    argc--;
+                    if (findStr(commandList, argv[0]))
+                    {
+                        Invoke(argv[0], 0f);
+                    }
+                    else sendOut(errorList[0]);
+                    //Debug.Log("argv= "+argv[0].ToString());
+                    ///commands
+                    ///
                 }
-                argc--;
-                if (findStr(commandList, argv[0]))
-                {
-                    Invoke(argv[0], 0f);
-                }
-                else sendOut(errorList[0]);
-                //Debug.Log("argv= "+argv[0].ToString());
-                ///commands
-                ///
-            }
-            else
-                if (inString != "")
-                sendOut(inString);
+                else
+                    sendOut(inString);
             /*//OLDVERSION
 			inString=inField.text+" ";
 			string command;

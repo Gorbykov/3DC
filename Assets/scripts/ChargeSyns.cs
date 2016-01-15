@@ -31,8 +31,16 @@ public class ChargeSyns : MonoBehaviour
         y.text = targetChGo.transform.position.y.ToString("N");
         z.text = targetChGo.transform.position.z.ToString("N");
         //Debug.Log(targetCh.f.ToString());
-        f.text = (targetCh.f.magnitude).ToString("N");
-        e.text = (targetCh.f.magnitude / targetCh.q).ToString("N");
+        if (targetCh.q != 0)
+        {
+            f.text = (targetCh.f.magnitude).ToString("N");
+            e.text = (targetCh.f.magnitude / targetCh.q).ToString("N");
+        }
+        else
+        {
+            f.text = "φ=" + targetCh.fi;
+            e.text = "W=" + (targetCh.f.magnitude).ToString("N") + " ГДж";
+        }
     }
 
     public void needUpdateOut()

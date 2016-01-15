@@ -12,6 +12,7 @@ public class Charge : MonoBehaviour
     public float q = 1.0f;
     public Texture plus;
     public Texture minus;
+    public Texture zero;
     public Vector3 f = new Vector3(0, 0, 0);
     public float fi = 0;
     public float w = 0;
@@ -65,7 +66,7 @@ public class Charge : MonoBehaviour
 
     void UpdateCharge(GameObject[] charges)
     {
-        if(this==null)
+        if (this == null)
         {
             return;
         }
@@ -79,6 +80,9 @@ public class Charge : MonoBehaviour
         if (q > 0)
             GetComponent<Renderer>().material.SetTexture("_MainTex", plus);
         else
+            if (q == 0)
+            GetComponent<Renderer>().material.SetTexture("_MainTex", zero);
+        else
             GetComponent<Renderer>().material.SetTexture("_MainTex", minus);
         //transform.localScale = new Vector3(Mathf.Abs(q), Mathf.Abs(q), Mathf.Abs(q));//Масштаб по величене заряда
         //-10
@@ -87,7 +91,7 @@ public class Charge : MonoBehaviour
         fi = 0f;
         foreach (GameObject charge in charges)
         {
-            if ((transform.position != charge.transform.position) && (charge!=null))
+            if ((transform.position != charge.transform.position) && (charge != null))
             {
                 Charge chs = charge.GetComponent<Charge>();
                 //chs.UpdateCharge();
@@ -204,9 +208,9 @@ public class Charge : MonoBehaviour
 			GUI.Label(position, name+"\n"+(f.magnitude).ToString()+" ГH", style);
 		}
 	}*/
-    void OnDestroy()
+    public void OnDestroy()
     {
-        if (XYZ.transform.parent==transform)
+        if (XYZ.transform.parent == transform)
         {
             XYZ.transform.SetParent(upStr.gameObject.transform.parent);
             XYZ.SetActive(false);

@@ -22,6 +22,9 @@ public class Structure : MonoBehaviour
     GameObject panel;
     public GameObject Content;
     public GameObject prefPanel;
+    StructureSyns StructS;
+    float oldQ;
+    Vector3 oldPos;
 
     void Start()
     {
@@ -32,9 +35,11 @@ public class Structure : MonoBehaviour
         Content = GameObject.Find("Content");
         panel.transform.SetParent(Content.transform);
         panel.transform.SetAsLastSibling();
-        StructureSyns StructS = panel.GetComponent<StructureSyns>();
+        StructS = panel.GetComponent<StructureSyns>();
         StructS.targetStructGo = gameObject;
         StructS.targetStruct = this;
+        oldQ = q;
+        oldPos = transform.position;
     }
 
     void strToArr()
@@ -163,8 +168,13 @@ public class Structure : MonoBehaviour
                         else
                         {
                             state = 0;
-                            error += "unknown symbol,";
+                            error += "unknown symbol";
                         }
+                    }
+                    else
+                    {
+                        state = 0;
+                        error += "unknown symbol";
                     }
                 }
             }
@@ -220,7 +230,7 @@ public class Structure : MonoBehaviour
                         c = Mathf.Pow(a, b);
                         break;
                     default:
-                        error += "unknown binary operation, ";
+                        error += "unknown binary operation ";
                         break;
                 }
                 p.Push(c.ToString());
@@ -254,13 +264,13 @@ public class Structure : MonoBehaviour
                         c = -a;
                         break;
                     default:
-                        error += "unknown unary operation(func), ";
+                        error += "unknown unary operation(func) ";
                         break;
                 }
                 p.Push(c.ToString());
             }
             else
-                error += "uncknown symbol, ";
+                error += "uncknown symbol ";
         }
         if (float.TryParse(p.Pop(), out c))
         {
@@ -317,7 +327,7 @@ public class Structure : MonoBehaviour
                 z = Calc(x, y);
                 if (!float.IsInfinity(z) && !float.IsNaN(z) && ((z <= maxz) && (z >= minz)))
                 {
-                    charges.Add(Instantiate(prefCharge, new Vector3(x, y, z)+transform.position, transform.rotation) as GameObject);
+                    charges.Add(Instantiate(prefCharge, new Vector3(x, y, z) + transform.position, transform.rotation) as GameObject);
                     charges[charges.Count - 1].name = "";
                     Charge charge = charges[charges.Count - 1].GetComponent<Charge>();
                     charge.isSilent = true;
@@ -339,22 +349,21 @@ public class Structure : MonoBehaviour
         yield return null;
         upStr.UpdateCharges();
         yield return null;
-        StructureSyns StrS = panel.GetComponent<StructureSyns>();
-        StrS.needUpdateIn();
+        StructS.needUpdateIn();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (needUpdate)
+        if ((!oldPos.Equals(transform.position)) || (!oldQ.Equals(q)))
         {
-            needUpdate = false;
-            StartCoroutine(UpdateStruct());
+            oldPos = transform.position;
+            oldQ = q;
+            StructS.needUpdateIn();
         }
-        
     }
-    
-    void OnDestoy()
+
+    public void OnDestroy()
     {
         Debug.Log("desstroy structure panel");
         Destroy(panel);
