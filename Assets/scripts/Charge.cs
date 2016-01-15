@@ -20,7 +20,7 @@ public class Charge : MonoBehaviour
     public bool needUpdate = false;
     public UpdateStream upStr;
     public GameObject XYZ;
-    public bool isSilent = false;
+    public bool isSilent;
     Text titleText;
     //GameObject[] charges;
     GameObject target;
@@ -38,24 +38,27 @@ public class Charge : MonoBehaviour
         UpdateStream.OnUpdateCharges += UpdateCharge;
     }
 
-    void Start()
+    public void Start()
     {
         gameObject.tag = "isCharge";
         canvas = GameObject.Find("Canvas");
         upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
+        Debug.Log("isSilent=" + isSilent.ToString());
         if (!isSilent)
         {
-            upStr.UpdateCharges();
-            Debug.Log("try to update from " + name);
+            Debug.Log("isSilent=" + isSilent.ToString());
             oldQ = q;
             oldPos = transform.position;
             panel = Instantiate(prefPanel);
             Content = GameObject.Find("Content");
+            Debug.Log(Content.ToString());
             panel.transform.SetParent(Content.transform);
             panel.transform.SetAsLastSibling();
             ChargeSyns ChS = panel.GetComponent<ChargeSyns>();
             ChS.targetChGo = gameObject;
             ChS.targetCh = this;
+            upStr.UpdateCharges();
+            Debug.Log("try to update from " + name);
         }
         XYZ = upStr.XYZ;
         //ChS.needUpdateIn();
@@ -209,12 +212,12 @@ public class Charge : MonoBehaviour
             XYZ.transform.SetParent(upStr.gameObject.transform.parent);
             XYZ.SetActive(false);
             //upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
-            if (!isSilent)
-            {
-                upStr.UpdateCharges();
-                Destroy(panel);
-                Destroy(title);
-            }
+        }
+        if (!isSilent)
+        {
+            upStr.UpdateCharges();
+            Destroy(panel);
+            Destroy(title);
         }
     }
 

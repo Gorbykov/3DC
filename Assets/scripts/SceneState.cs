@@ -10,8 +10,18 @@ public class SceneState
     [XmlArrayItem("Charge")]
     public List<ChData> charges = new List<ChData>();
 
+    [XmlArray("Structures")]
+    [XmlArrayItem("Structure")]
+    public List<StrData> structures = new List<StrData>();
+
     public SceneState() { }
+
     public void AddItem(ChData item)
+    {   // добавление элементов - будем этим пользоваться
+        charges.Add(item);          // при генерации дефолтной версии локации
+    }
+
+    public void AddItem(StrData item)
     {   // добавление элементов - будем этим пользоваться
         charges.Add(item);          // при генерации дефолтной версии локации
     }

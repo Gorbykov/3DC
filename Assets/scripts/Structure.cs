@@ -319,7 +319,9 @@ public class Structure : MonoBehaviour
         }
         yield return null;
         upStr.UpdateCharges();
-        yield break;
+        yield return null;
+        StructureSyns StrS = panel.GetComponent<StructureSyns>();
+        StrS.needUpdateIn();
     }
 
     // Update is called once per frame
@@ -330,11 +332,12 @@ public class Structure : MonoBehaviour
             needUpdate = false;
             StartCoroutine(UpdateStruct());
         }
-
+        
     }
     
     void OnDestoy()
     {
+        Debug.Log("desstroy structure panel");
         Destroy(panel);
     }
 }

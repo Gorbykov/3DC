@@ -19,6 +19,13 @@ public class StructureSyns : MonoBehaviour {
     public void StructDestoy()
     {
         Destroy(targetStructGo);
+        Destroy(this.gameObject);
+    }
+
+    public void StructUpdate()
+    {
+
+        StartCoroutine(targetStruct.UpdateStruct());
     }
 
     public void needUpdateIn()
@@ -33,6 +40,7 @@ public class StructureSyns : MonoBehaviour {
         miny.text = targetStruct.miny.ToString("N");
         minz.text = targetStruct.minz.ToString("N");
         maxx.text = targetStruct.maxx.ToString("N");
+        maxy.text = targetStruct.maxy.ToString("N");
         maxz.text = targetStruct.maxz.ToString("N");
         delta.text = targetStruct.delta.ToString("N");
         //Debug.Log(targetCh.f.ToString());
@@ -42,10 +50,18 @@ public class StructureSyns : MonoBehaviour {
     {
         Vector3 pos = Vector3.zero;
         targetStruct.name = StructName.text;
+        targetStruct.arg = arg.text;
         float.TryParse(q.text, out targetStruct.q);
         float.TryParse(x.text, out pos.x);
         float.TryParse(y.text, out pos.y);
         float.TryParse(z.text, out pos.z);
+        float.TryParse(minx.text, out targetStruct.minx);
+        float.TryParse(miny.text, out targetStruct.miny);
+        float.TryParse(minz.text, out targetStruct.minz);
+        float.TryParse(maxx.text, out targetStruct.maxx);
+        float.TryParse(maxy.text, out targetStruct.maxy);
+        float.TryParse(maxz.text, out targetStruct.maxz);
+        float.TryParse(delta.text, out targetStruct.delta);
         targetStructGo.transform.position = pos;
     }
 

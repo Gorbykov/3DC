@@ -43,3 +43,61 @@ public class ChData
     }
 
 }
+
+[XmlType("Structure Data")]
+public class StrData : ChData
+{
+    [XmlElement("Arg")]
+    public string Arg { set; get; }
+
+    [XmlElement("MinX")]
+    public float MinX { set; get; }
+
+    [XmlElement("MinY")]
+    public float MinY { set; get; }
+
+    [XmlElement("MinZ")]
+    public float MinZ { set; get; }
+
+    [XmlElement("MaxX")]
+    public float MaxX { set; get; }
+
+    [XmlElement("MaxY")]
+    public float MaxY { set; get; }
+
+    [XmlElement("MaxZ")]
+    public float MaxZ { set; get; }
+
+    [XmlElement("Delta")]
+    public float Delta { set; get; }
+
+    public StrData() { }
+
+    public StrData(string type, string name, float q, Vector3 position, string arg, float minx, float miny, float minz, float maxx, float maxy, float maxz, float delta) : base(type, name, q, position)
+    {
+        this.Arg = arg;
+        this.MinX = minx;
+        this.MinY = miny;
+        this.MinZ = minz;
+        this.MaxX = maxx;
+        this.MaxY = maxy;
+        this.MaxZ = maxz;
+        this.Delta = delta;
+    }
+
+    public override void Estate()
+    {
+        Structure str = _inst.GetComponent("Structure") as Structure;
+        str.name = Name;
+        Debug.Log("create" + Name);
+        str.q = Q;
+        str.minx = MinX;
+        str.miny = MinY;
+        str.minz = MinZ;
+        str.maxx = MaxX;
+        str.maxy = MaxY;
+        str.maxz = MaxZ;
+        str.arg = Arg;
+        str.delta = Delta;
+    }
+}

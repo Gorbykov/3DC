@@ -20,6 +20,7 @@ public class ChargeSyns : MonoBehaviour
     public void ChDestoy()
     {
         Destroy(targetChGo);
+        //Destroy(this);
     }
 
     public void needUpdateIn()

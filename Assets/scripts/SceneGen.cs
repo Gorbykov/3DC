@@ -22,7 +22,7 @@ public class SceneGen : MonoBehaviour
         {
             fName = PlayerPrefs.GetString("lastFName");
         }
-        datapath= Application.dataPath + "/Saves/" + fName+ ".csxml";
+        datapath = Application.dataPath + "/Saves/" + fName + ".csxml";
         if (File.Exists(datapath))  // если файл сохранения уже существует
             state = SaveLoad.DeXml(datapath);  // считываем state оттуда
         else
@@ -53,6 +53,7 @@ public class SceneGen : MonoBehaviour
             // овеществляем их
             felt.Estate(); // и задаём дополнительные параметры
         }
+
     }
 
     public void Dump()
@@ -62,9 +63,18 @@ public class SceneGen : MonoBehaviour
         foreach (GameObject chGo in chArr)
         {
             Charge ch = chGo.GetComponent("Charge") as Charge;
-            state.AddItem(new ChData("Sphere", ch.name, ch.q, chGo.transform.position));
+            if (!ch.isSilent)
+            {
+                state.AddItem(new ChData("Sphere", ch.name, ch.q, chGo.transform.position));
+            }
         }
-        if (datapath=="")
+        GameObject[] strArr = GameObject.FindGameObjectsWithTag("isStruct");
+        foreach (GameObject strGo in strArr)
+        {
+            Structure str = strGo.GetComponent("Structure") as Structure;
+            state.AddItem(new StrData("StructureObj", str.name, str.q, strGo.transform.position, str.arg, str.minx, str.miny, str.minz, str.maxx, str.maxy, str.maxz, str.delta));
+        }
+        if (datapath == "")
         {
             fName = DateTime.Now.ToString("MMddyyHHmmss");
             datapath = Application.dataPath + "/Saves/SavedData" + fName + ".csxml";

@@ -97,6 +97,8 @@ public class ConsoleInput : MonoBehaviour
         Charge charge = newCharge.GetComponent<Charge>();
         charge.q = q;
         charge.name = name;
+        charge.isSilent = false;
+        //charge.Start();
         sendOut('/' + argv[0] + ' ' + name + ' ' + q.ToString() + ' ' + x.ToString() + ' ' + y.ToString() + ' ' + z.ToString());
     }
 
