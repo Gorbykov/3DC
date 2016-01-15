@@ -43,7 +43,6 @@ public class Charge : MonoBehaviour
         gameObject.tag = "isCharge";
         canvas = GameObject.Find("Canvas");
         upStr = GameObject.Find("UpdateStreamObj").GetComponent<UpdateStream>();
-        Debug.Log("isSilent=" + isSilent.ToString());
         if (!isSilent)
         {
             Debug.Log("isSilent=" + isSilent.ToString());

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System;
 
 public class Structure : MonoBehaviour
 {
@@ -38,127 +39,141 @@ public class Structure : MonoBehaviour
 
     void strToArr()
     {
-        bool waitChar = false;
-        arg.ToLower();
-        arr = new StringCollection();
-        //int j = 0;
-        for (int i = 0; i < arg.Length; i++)
+        try
         {
-            if (((arg[i] >= 'a') && (arg[i] <= 'z')) || ((arg[i] >= '0') && (arg[i] <= '9')) || arg[i] == '.')
+            bool waitChar = false;
+            arg.ToLower();
+            arr = new StringCollection();
+            //int j = 0;
+            for (int i = 0; i < arg.Length; i++)
             {
-                if (waitChar && (arr[arr.Count - 1] != "-"))
-                    arr[arr.Count - 1] += arg[i];
+                if (((arg[i] >= 'a') && (arg[i] <= 'z')) || ((arg[i] >= '0') && (arg[i] <= '9')) || arg[i] == '.')
+                {
+                    if (waitChar && (arr[arr.Count - 1] != "-"))
+                        arr[arr.Count - 1] += arg[i];
+                    else
+                    {
+                        arr.Add(arg[i] + "");
+                        waitChar = true;
+                    }
+                }
+                else
+                    if ((arg[i] == '-') && ((i == 0) || ((arg[i - 1] < '0') || (arg[i - 1] > '9'))))
+                {
+                    arr.Add("unmin");
+                    //waitChar = true;
+                }
                 else
                 {
                     arr.Add(arg[i] + "");
-                    waitChar = true;
+                    waitChar = false;
                 }
             }
-            else
-                if ((arg[i] == '-') && ((i == 0) || ((arg[i - 1] < '0') || (arg[i - 1] > '9'))))
-            {
-                arr.Add("unmin");
-                //waitChar = true;
-            }
-            else
-            {
-                arr.Add(arg[i] + "");
-                waitChar = false;
-            }
+            arr.Add("$");
         }
-        arr.Add("$");
+        catch
+        {
+            throw;
+        }
     }
 
     void arrToPoland()
     {
-        Stack<string> operations = new Stack<string>();
-        Stack<string> poland = new Stack<string>();
-        operations.Push("-1");
-        int state = 2;
-        int i = 0;
-        float buf;
-        while (state == 2)
+        try
         {
-            string peek = operations.Peek();
-            if (float.TryParse(arr[i], out buf) || (arr[i] == "x") || (arr[i] == "y"))
+            Stack<string> operations = new Stack<string>();
+            Stack<string> poland = new Stack<string>();
+            operations.Push("-1");
+            int state = 2;
+            int i = 0;
+            float buf;
+            while (state == 2)
             {
-                poland.Push(arr[i]);
-                i++;
-            }
-            else
-            {
-                if ((arr[i] == "+") || (arr[i] == "-") || (arr[i].Length >= 2))
+                string peek = operations.Peek();
+                if (float.TryParse(arr[i], out buf) || (arr[i] == "x") || (arr[i] == "y"))
                 {
-                    if ((peek == "-1") || (peek == "("))
-                    {
-                        operations.Push(arr[i]);
-                        i++;
-                    }
-                    else
-                    if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
-                    {
-                        poland.Push(operations.Pop());
-                    }
-                }
-                else
-                    if ((arr[i] == "*") || (arr[i] == "/") || (arr[i] == "^"))
-                {
-                    if ((peek == "-1") || (peek == "(") || (peek == "+") || (peek == "-") || (peek.Length >= 2))
-                    {
-                        operations.Push(arr[i]);
-                        i++;
-                    }
-                    else
-                    {
-                        poland.Push(operations.Pop());
-                    }
-                }
-                else
-                    if (arr[i] == "(")
-                {
-                    operations.Push(arr[i]);
+                    poland.Push(arr[i]);
                     i++;
                 }
                 else
-                    if (arr[i] == ")")
                 {
-                    if (peek == "-1")
-                        state = 0;
-                    else
-                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
+                    if ((arr[i] == "+") || (arr[i] == "-") || (arr[i].Length >= 2))
                     {
-                        poland.Push(operations.Pop());
+                        if ((peek == "-1") || (peek == "("))
+                        {
+                            operations.Push(arr[i]);
+                            i++;
+                        }
+                        else
+                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
+                        {
+                            poland.Push(operations.Pop());
+                        }
                     }
                     else
-                        if (peek == "(")
+                        if ((arr[i] == "*") || (arr[i] == "/") || (arr[i] == "^"))
                     {
-                        operations.Pop();
+                        if ((peek == "-1") || (peek == "(") || (peek == "+") || (peek == "-") || (peek.Length >= 2))
+                        {
+                            operations.Push(arr[i]);
+                            i++;
+                        }
+                        else
+                        {
+                            poland.Push(operations.Pop());
+                        }
+                    }
+                    else
+                        if (arr[i] == "(")
+                    {
+                        operations.Push(arr[i]);
                         i++;
                     }
-                }
-                else
-                    if (arr[i] == "$")
-                {
-                    if (peek == "-1")
-                        state = 1;
                     else
-                        if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
-                        poland.Push(operations.Pop());
-                    else
-                        if (peek == "(")
+                        if (arr[i] == ")")
                     {
-                        state = 0;
-                        error += "wrong(), ";
+                        if (peek == "-1")
+                            state = 0;
+                        else
+                            if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
+                        {
+                            poland.Push(operations.Pop());
+                        }
+                        else
+                            if (peek == "(")
+                        {
+                            operations.Pop();
+                            i++;
+                        }
                     }
                     else
+                        if (arr[i] == "$")
                     {
-                        state = 0;
-                        error += "unknown symbol,";
+                        if (peek == "-1")
+                            state = 1;
+                        else
+                            if ((peek == "+") || (peek == "-") || (peek == "*") || (peek == "/") || (peek == "^") || (peek.Length >= 2))
+                            poland.Push(operations.Pop());
+                        else
+                            if (peek == "(")
+                        {
+                            state = 0;
+                            error += "wrong(), ";
+                        }
+                        else
+                        {
+                            state = 0;
+                            error += "unknown symbol,";
+                        }
                     }
                 }
             }
+            polandArr = poland.ToArray();
         }
-        polandArr = poland.ToArray();
+        catch
+        {
+            throw;
+        }
     }
 
     float Calc(float x, float y)
@@ -265,19 +280,23 @@ public class Structure : MonoBehaviour
             Destroy(el);
         }
         charges = new List<GameObject>();
-        strToArr();
-        /*if (error != "")
+        try
+        {
+            strToArr();
+            arrToPoland();
+            Calc(1, 1);
+        }
+        catch
+        {
+            error += "Error in arg convertation: ";
+        }
+        yield return null;
+        if (error != "")
         {
             console.sendOut(error);
+            error = "";
             yield break;
         }
-        yield return null;*/
-        arrToPoland();
-        /*if (error != "")
-        {
-            console.sendOut(error);
-            yield break;
-        }*/
         string st = "";
         foreach (string el in polandArr)
         {
