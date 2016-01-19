@@ -278,7 +278,7 @@ public class Structure : MonoBehaviour
         }
         else
         {
-            error += "calc err, ";
+            error += "calc err ";
             return -1;
         }
     }
@@ -289,6 +289,7 @@ public class Structure : MonoBehaviour
         {
             Destroy(el);
         }
+        charges.Clear();
         charges = new List<GameObject>();
         try
         {
@@ -298,7 +299,7 @@ public class Structure : MonoBehaviour
         }
         catch
         {
-            error += "Error in arg convertation: ";
+            error += "Error in arg convertation ";
         }
         yield return null;
         if (error != "")

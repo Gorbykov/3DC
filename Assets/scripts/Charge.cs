@@ -64,7 +64,7 @@ public class Charge : MonoBehaviour
         //ChS.needUpdateIn();
     }
 
-    void UpdateCharge(GameObject[] charges)
+    void UpdateCharge(ref GameObject[] charges)
     {
         if (this == null)
         {
@@ -110,8 +110,7 @@ public class Charge : MonoBehaviour
         //
         //Масштаб стрелки
         arrow = transform.GetChild(0);
-        if (q != 0)
-            arrow.localScale = new Vector3(0.5f, Mathf.Abs(f.magnitude * scale), 0.5f);
+        arrow.localScale = new Vector3(0.5f, Mathf.Abs(f.magnitude * scale), 0.5f);
         //
         //Разворот стрелки (костыль через LookAt)
         //Debug.Log(arrow.localScale.ToString());
@@ -148,11 +147,11 @@ public class Charge : MonoBehaviour
                 {
                     upStr.UpdateCharges();
                 }
-            }
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-            Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
+            }            
             if (!isTitleCreate)
             {
+                Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+                Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
                 title = Instantiate(title, new Vector3(screenPosition.x, Screen.height - screenPosition.y, 0), transform.rotation) as GameObject;
                 title.transform.SetParent(canvas.transform);
                 titleText = title.GetComponent<Text>();
@@ -164,6 +163,8 @@ public class Charge : MonoBehaviour
             }
             else
             {
+                Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+                Vector3 cameraRelative = Camera.main.transform.InverseTransformPoint(transform.position);
                 if (cameraRelative.z > 0)
                 {
                     title.SetActive(true);
@@ -222,6 +223,7 @@ public class Charge : MonoBehaviour
             Destroy(panel);
             Destroy(title);
         }
+        UpdateStream.OnUpdateCharges -= UpdateCharge;
     }
 
     void OnMouseDown()
@@ -233,10 +235,5 @@ public class Charge : MonoBehaviour
         XYZ.transform.position = transform.position;
         //XYZ.SetActive(false);
         XYZ.SetActive(true);
-    }
-
-    void OnDisable()
-    {
-        UpdateStream.OnUpdateCharges += UpdateCharge;
     }
 }

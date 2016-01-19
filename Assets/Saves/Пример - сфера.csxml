@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SceneState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Charges>
+    <Charge xsi:type="Structure_x0020_Data">
+      <Type>StructureObj</Type>
+      <Name>S</Name>
+      <q>100</q>
+      <Position>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Position>
+      <Arg>sqrt(100-x^2-y^2)</Arg>
+      <MinX>-10</MinX>
+      <MinY>-10</MinY>
+      <MinZ>-10</MinZ>
+      <MaxX>11</MaxX>
+      <MaxY>11</MaxY>
+      <MaxZ>11</MaxZ>
+      <Delta>0.5</Delta>
+    </Charge>
+    <Charge xsi:type="Structure_x0020_Data">
+      <Type>StructureObj</Type>
+      <Name>S</Name>
+      <q>100</q>
+      <Position>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Position>
+      <Arg>-(sqrt(100-x^2-y^2))</Arg>
+      <MinX>-10</MinX>
+      <MinY>-10</MinY>
+      <MinZ>-10</MinZ>
+      <MaxX>11</MaxX>
+      <MaxY>11</MaxY>
+      <MaxZ>11</MaxZ>
+      <Delta>0.5</Delta>
+    </Charge>
+  </Charges>
+  <Structures />
+</SceneState>

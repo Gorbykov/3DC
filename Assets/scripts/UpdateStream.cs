@@ -10,9 +10,10 @@ public class UpdateStream : MonoBehaviour
     public bool menuState = true;
     public CameraControl camContr;
     public GameObject XYZ;
-    public delegate void UpdateAction(GameObject[] charges);
+    public delegate void UpdateAction(ref GameObject[] charges);
     public static event UpdateAction OnUpdateCharges;
     public Transform addButton;
+    GameObject[] charges = new GameObject[0];
 
     public void New()
     {
@@ -21,11 +22,10 @@ public class UpdateStream : MonoBehaviour
 
     public void UpdateCharges()
     {
-        //StartCoroutine("UpdateChargesEnum");
-        GameObject[] charges;
+        charges = new GameObject[0];
         charges = GameObject.FindGameObjectsWithTag("isCharge");
         if (OnUpdateCharges!=null)
-            OnUpdateCharges(charges);
+            OnUpdateCharges(ref charges);
     }
 
     /*IEnumerator UpdateChargesEnum()
