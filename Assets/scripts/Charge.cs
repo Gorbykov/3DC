@@ -110,7 +110,14 @@ public class Charge : MonoBehaviour
         //
         //Масштаб стрелки
         arrow = transform.GetChild(0);
-        arrow.localScale = new Vector3(0.5f, Mathf.Abs(f.magnitude * scale), 0.5f);
+        if (q != 0)
+        {
+            arrow.localScale = new Vector3(0.5f, Mathf.Abs(f.magnitude * scale), 0.5f);
+        }
+        else
+        {
+            arrow.localScale = new Vector3(0.5f, Mathf.Abs(Mathf.Sqrt(f.magnitude * scale)), 0.5f);
+        }
         //
         //Разворот стрелки (костыль через LookAt)
         //Debug.Log(arrow.localScale.ToString());
@@ -147,7 +154,7 @@ public class Charge : MonoBehaviour
                 {
                     upStr.UpdateCharges();
                 }
-            }            
+            }
             if (!isTitleCreate)
             {
                 Vector3 screenPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);

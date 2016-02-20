@@ -34,12 +34,12 @@ public class ChargeSyns : MonoBehaviour
         if (targetCh.q != 0)
         {
             f.text = (targetCh.f.magnitude).ToString("N");
-            e.text = (targetCh.f.magnitude / targetCh.q).ToString("N");
+            e.text = (Mathf.Abs(targetCh.f.magnitude / targetCh.q)).ToString("N");
         }
         else
         {
             f.text = "φ=" + targetCh.fi;
-            e.text = "W=" + (targetCh.f.magnitude).ToString("N") + " ГДж";
+            e.text = (targetCh.f.magnitude).ToString("N");
         }
     }
 

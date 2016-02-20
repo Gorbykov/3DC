@@ -25,6 +25,7 @@ public class Structure : MonoBehaviour
     StructureSyns StructS;
     float oldQ;
     Vector3 oldPos;
+    GameObject waitPanel;
 
     void Start()
     {
@@ -40,6 +41,7 @@ public class Structure : MonoBehaviour
         StructS.targetStruct = this;
         oldQ = q;
         oldPos = transform.position;
+        waitPanel = upStr.waitPanel;
     }
 
     void strToArr()
@@ -285,6 +287,8 @@ public class Structure : MonoBehaviour
 
     public IEnumerator UpdateStruct()
     {
+        waitPanel.SetActive(true);
+        yield return null;
         foreach (GameObject el in charges)
         {
             Destroy(el);
@@ -351,6 +355,7 @@ public class Structure : MonoBehaviour
         upStr.UpdateCharges();
         yield return null;
         StructS.needUpdateIn();
+        waitPanel.SetActive(false);
     }
 
     // Update is called once per frame

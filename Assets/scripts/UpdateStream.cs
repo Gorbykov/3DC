@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class UpdateStream : MonoBehaviour
 {
 
-    public GameObject inputPanel;
+    public GameObject canvas;
     public Animator listCh;
     public bool menuState = true;
     public CameraControl camContr;
@@ -14,6 +14,8 @@ public class UpdateStream : MonoBehaviour
     public static event UpdateAction OnUpdateCharges;
     public Transform addButton;
     GameObject[] charges = new GameObject[0];
+    public GameObject waitPanel;
+    public GameObject chListGo;
 
     public void New()
     {
@@ -83,10 +85,12 @@ public class UpdateStream : MonoBehaviour
     void Update()
     {
         addButton.SetAsLastSibling();
-        //отклучение интерфейса
+        //отключение интерфейса
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
-            inputPanel.SetActive(!inputPanel.activeSelf);
+            chListGo.SetActive(false);
+            canvas.SetActive(!canvas.activeSelf);
+            chListGo.SetActive(true); //дикий костыль
         }
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
